@@ -20,10 +20,6 @@ public class ParkingLot {
         return slots;
     }
 
-    public void setSlots(List<Slot> slots) {
-        this.slots = slots;
-    }
-
     public int totalSlots() {
         return getSlots().size();
     }
@@ -37,5 +33,32 @@ public class ParkingLot {
             }
         }
         return totalAvailable;
+    }
+
+    private int nextAvailableSlot() {
+        List<Slot> allSlots = getSlots();
+        for (Slot slot: allSlots) {
+            if (slot.isAvailable()) {
+                return slot.getSlotID();
+            }
+        }
+        return -1;
+    }
+
+    public int parkInSlot(Car car) {
+        List<Slot> allSlots = getSlots();
+        int slotNo = nextAvailableSlot();
+        Slot slot = allSlots.get(slotNo);
+        slot.park(car);
+        return slot.getSlotID();
+    }
+
+    public int findSlotByCar(String regNo) {
+        List<Slot> allSlots = getSlots();
+        for (Slot slot: allSlots) {
+            if (slot.containsCar(regNo))
+                return slot.getSlotID();
+        }
+        return -1;
     }
 }
