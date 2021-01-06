@@ -45,11 +45,11 @@ public class ParkingLot {
         return -1;
     }
 
-    public int parkInSlot(Car car) {
+    public int parkInSlot(Vehicle vehicle) {
         List<Slot> allSlots = getSlots();
         int slotNo = nextAvailableSlot();
         Slot slot = allSlots.get(slotNo);
-        slot.park(car);
+        slot.park(vehicle);
         return slot.getSlotID();
     }
 

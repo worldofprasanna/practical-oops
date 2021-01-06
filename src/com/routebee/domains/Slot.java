@@ -24,8 +24,8 @@ public class Slot {
         return slotID;
     }
 
-    public int park(Car car) {
-        this.setVehicle(car);
+    public int park(Vehicle vehicle) {
+        this.setVehicle(vehicle);
         return getSlotID();
     }
 
