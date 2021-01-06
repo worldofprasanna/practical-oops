@@ -4,29 +4,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParkingLot {
-    private List<Slot> slots;
+    private List<Slot> carSlots;
+    private List<Slot> bikeSlots;
 
-    public ParkingLot(int count) {
+    public ParkingLot(int carCount, int bikeCount) {
         int i = 0;
-        slots = new ArrayList<>();
-        while (i < count) {
-            Slot slot = new Slot(i);
-            slots.add(slot);
+        carSlots = new ArrayList<>();
+        while (i < carCount) {
+            Slot slot = new CarSlot(i);
+            carSlots.add(slot);
+            i++;
+        }
+        i = 0;
+        bikeSlots = new ArrayList<>();
+        while (i < bikeCount) {
+
+            Slot slot = new CarSlot(i);
+            bikeSlots.add(slot);
             i++;
         }
     }
 
-    public List<Slot> getSlots() {
-        return slots;
+    public List<Slot> getCarSlots() {
+        return carSlots;
+    }
+
+    public List<Slot> getBikeSlots() {
+        return carSlots;
     }
 
     public int totalSlots() {
-        return getSlots().size();
+        return getCarSlots().size() + getBikeSlots().size();
     }
 
     public int totalAvailableSlots() {
-        List<Slot> allSlots = getSlots();
+        List<Slot> allSlots = getCarSlots();
         int totalAvailable = 0;
+        for (Slot slot: allSlots) {
+            if (slot.isAvailable()) {
+                totalAvailable ++;
+            }
+        }
+        allSlots = getBikeSlots();
         for (Slot slot: allSlots) {
             if (slot.isAvailable()) {
                 totalAvailable ++;
@@ -35,26 +54,36 @@ public class ParkingLot {
         return totalAvailable;
     }
 
-    private int nextAvailableSlot() {
-        List<Slot> allSlots = getSlots();
+    private Slot nextAvailableSlot(List<Slot> allSlots) {
         for (Slot slot: allSlots) {
             if (slot.isAvailable()) {
-                return slot.getSlotID();
+                return slot;
             }
         }
-        return -1;
+        return null;
+    }
+
+    private Slot nextAvailableCarSlot() {
+        return nextAvailableSlot(this.getCarSlots());
+    }
+
+    private Slot nextAvailableBikeSlot() {
+        return nextAvailableSlot(this.getBikeSlots());
     }
 
     public int parkInSlot(Vehicle vehicle) {
-        List<Slot> allSlots = getSlots();
-        int slotNo = nextAvailableSlot();
-        Slot slot = allSlots.get(slotNo);
+        Slot slot = null;
+        if (vehicle instanceof Car) {
+            slot = nextAvailableCarSlot();
+        } else {
+            slot = nextAvailableBikeSlot();
+        }
         slot.park(vehicle);
         return slot.getSlotID();
     }
 
     public int findSlotByCar(String regNo) {
-        List<Slot> allSlots = getSlots();
+        List<Slot> allSlots = getCarSlots();
         for (Slot slot: allSlots) {
             if (slot.containsCar(regNo))
                 return slot.getSlotID();

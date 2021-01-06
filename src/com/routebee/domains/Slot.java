@@ -1,6 +1,6 @@
 package com.routebee.domains;
 
-public class Slot {
+abstract class Slot {
     private Vehicle vehicle;
     private int slotID;
 
